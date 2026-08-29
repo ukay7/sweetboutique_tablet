@@ -163,34 +163,36 @@ class DatabaseSeeder extends Seeder
             $product->badges()->sync(collect($data['badges'])->map(fn ($slug) => $badges[$slug])->all());
         }
 
-        $productIds = Product::pluck('id', 'slug');
-        $demoInquiries = [
-            ['reference' => 'MMC-DEMO-001', 'customer_name' => 'Ayesha Khan', 'phone' => '0301 245 8890', 'email' => 'ayesha@example.com', 'event_date' => '2026-09-05', 'event_type' => 'Birthday', 'fulfilment' => 'pickup', 'status' => 'new', 'estimated_total' => 48, 'product' => 'midnight-truffle', 'variant' => 'Classic', 'quantity' => 1, 'notes' => 'Please add “Happy 30th, Zara” in gold lettering.'],
-            ['reference' => 'MMC-DEMO-002', 'customer_name' => 'Hamza Siddiqui', 'phone' => '0322 718 4421', 'email' => 'hamza@example.com', 'event_date' => '2026-09-12', 'event_type' => 'Anniversary', 'fulfilment' => 'delivery', 'status' => 'contacted', 'estimated_total' => 78, 'product' => 'strawberry-chantilly', 'variant' => 'Grand', 'quantity' => 1, 'notes' => 'Soft ivory finish with fresh strawberries.'],
-            ['reference' => 'MMC-DEMO-003', 'customer_name' => 'Sana Ahmed', 'phone' => '0334 906 1138', 'email' => 'sana@example.com', 'event_date' => '2026-10-02', 'event_type' => 'Wedding', 'fulfilment' => 'delivery', 'status' => 'new', 'estimated_total' => 0, 'product' => null, 'variant' => null, 'quantity' => 1, 'notes' => 'Three-tier ivory and sage cake for approximately 90 guests.'],
-            ['reference' => 'MMC-DEMO-004', 'customer_name' => 'Bilal Raza', 'phone' => '0300 662 7845', 'email' => null, 'event_date' => '2026-09-01', 'event_type' => 'Dinner Party', 'fulfilment' => 'pickup', 'status' => 'quoted', 'estimated_total' => 76, 'product' => 'classic-tiramisu', 'variant' => 'Classic', 'quantity' => 2, 'notes' => 'Two trays, both without decorative message.'],
-            ['reference' => 'MMC-DEMO-005', 'customer_name' => 'Mariam Iqbal', 'phone' => '0315 440 1928', 'email' => 'mariam@example.com', 'event_date' => '2026-09-08', 'event_type' => 'Corporate Event', 'fulfilment' => 'delivery', 'status' => 'confirmed', 'estimated_total' => 72, 'product' => 'parisian-macarons', 'variant' => 'Twelve piece box', 'quantity' => 3, 'notes' => 'Assorted neutral colours for an office reception.'],
-        ];
+        if (app()->environment(['local', 'testing'])) {
+            $productIds = Product::pluck('id', 'slug');
+            $demoInquiries = [
+                ['reference' => 'MMC-DEMO-001', 'customer_name' => 'Ayesha Khan', 'phone' => '0301 245 8890', 'email' => 'ayesha@example.com', 'event_date' => '2026-09-05', 'event_type' => 'Birthday', 'fulfilment' => 'pickup', 'status' => 'new', 'estimated_total' => 48, 'product' => 'midnight-truffle', 'variant' => 'Classic', 'quantity' => 1, 'notes' => 'Please add “Happy 30th, Zara” in gold lettering.'],
+                ['reference' => 'MMC-DEMO-002', 'customer_name' => 'Hamza Siddiqui', 'phone' => '0322 718 4421', 'email' => 'hamza@example.com', 'event_date' => '2026-09-12', 'event_type' => 'Anniversary', 'fulfilment' => 'delivery', 'status' => 'contacted', 'estimated_total' => 78, 'product' => 'strawberry-chantilly', 'variant' => 'Grand', 'quantity' => 1, 'notes' => 'Soft ivory finish with fresh strawberries.'],
+                ['reference' => 'MMC-DEMO-003', 'customer_name' => 'Sana Ahmed', 'phone' => '0334 906 1138', 'email' => 'sana@example.com', 'event_date' => '2026-10-02', 'event_type' => 'Wedding', 'fulfilment' => 'delivery', 'status' => 'new', 'estimated_total' => 0, 'product' => null, 'variant' => null, 'quantity' => 1, 'notes' => 'Three-tier ivory and sage cake for approximately 90 guests.'],
+                ['reference' => 'MMC-DEMO-004', 'customer_name' => 'Bilal Raza', 'phone' => '0300 662 7845', 'email' => null, 'event_date' => '2026-09-01', 'event_type' => 'Dinner Party', 'fulfilment' => 'pickup', 'status' => 'quoted', 'estimated_total' => 76, 'product' => 'classic-tiramisu', 'variant' => 'Classic', 'quantity' => 2, 'notes' => 'Two trays, both without decorative message.'],
+                ['reference' => 'MMC-DEMO-005', 'customer_name' => 'Mariam Iqbal', 'phone' => '0315 440 1928', 'email' => 'mariam@example.com', 'event_date' => '2026-09-08', 'event_type' => 'Corporate Event', 'fulfilment' => 'delivery', 'status' => 'confirmed', 'estimated_total' => 72, 'product' => 'parisian-macarons', 'variant' => 'Twelve piece box', 'quantity' => 3, 'notes' => 'Assorted neutral colours for an office reception.'],
+            ];
 
-        foreach ($demoInquiries as $demo) {
-            $product = $demo['product'] ? Product::with('variants')->find($productIds[$demo['product']]) : null;
-            $variant = $product?->variants->firstWhere('name', $demo['variant']);
-            $inquiry = Inquiry::updateOrCreate(['reference' => $demo['reference']], [
-                ...collect($demo)->except(['product', 'variant', 'quantity', 'notes'])->all(),
-                'address' => $demo['fulfilment'] === 'delivery' ? 'Lahore, Punjab' : null,
-                'customer_notes' => $demo['notes'],
-            ]);
-            $inquiry->items()->delete();
-            $inquiry->items()->create([
-                'product_id' => $product?->id,
-                'product_variant_id' => $variant?->id,
-                'product_name' => $product?->name ?? 'Custom Wedding Cake',
-                'variant_name' => $variant?->name,
-                'quantity' => $demo['quantity'],
-                'unit_price' => $product ? (float) ($variant?->price ?? $product->base_price) : 0,
-                'notes' => $demo['notes'],
-                'custom_details' => $product ? null : ['guests' => '90', 'style' => 'Three-tier', 'colours' => 'Ivory and sage'],
-            ]);
+            foreach ($demoInquiries as $demo) {
+                $product = $demo['product'] ? Product::with('variants')->find($productIds[$demo['product']]) : null;
+                $variant = $product?->variants->firstWhere('name', $demo['variant']);
+                $inquiry = Inquiry::updateOrCreate(['reference' => $demo['reference']], [
+                    ...collect($demo)->except(['product', 'variant', 'quantity', 'notes'])->all(),
+                    'address' => $demo['fulfilment'] === 'delivery' ? 'Lahore, Punjab' : null,
+                    'customer_notes' => $demo['notes'],
+                ]);
+                $inquiry->items()->delete();
+                $inquiry->items()->create([
+                    'product_id' => $product?->id,
+                    'product_variant_id' => $variant?->id,
+                    'product_name' => $product?->name ?? 'Custom Wedding Cake',
+                    'variant_name' => $variant?->name,
+                    'quantity' => $demo['quantity'],
+                    'unit_price' => $product ? (float) ($variant?->price ?? $product->base_price) : 0,
+                    'notes' => $demo['notes'],
+                    'custom_details' => $product ? null : ['guests' => '90', 'style' => 'Three-tier', 'colours' => 'Ivory and sage'],
+                ]);
+            }
         }
 
         DB::table('settings')->updateOrInsert(['key' => 'bakery_name'], ['value' => 'Sweet Boutique', 'created_at' => now(), 'updated_at' => now()]);
