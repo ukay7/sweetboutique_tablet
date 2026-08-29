@@ -7,7 +7,7 @@ export type AdminSettingsData = { users: AdminUser[]; roles: Role[]; available_m
 export type ProductVariant = { id: number; product_id: number; name: string; price: string; serves?: string | null; serves_min?: number | null; serves_max?: number | null; is_active: boolean };
 export type Product = {
     id: number; category_id: number; subcategory_id?: number | null; name: string; slug: string;
-    short_description: string; description?: string | null; base_price: string; image_slot: string;
+    short_description: string; description?: string | null; base_price: string; preparation_hours: number; image_slot: string;
     image_url?: string | null; badge?: string | null; is_featured: boolean;
     is_active: boolean; sort_order: number; category?: Pick<Category, 'id' | 'name' | 'slug'>;
     subcategory?: Pick<Subcategory, 'id' | 'name' | 'slug'> | null; variants: ProductVariant[];

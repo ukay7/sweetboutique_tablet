@@ -11,10 +11,10 @@ class Product extends Model
 {
     protected $fillable = [
         'category_id', 'subcategory_id', 'name', 'slug', 'short_description', 'description',
-        'base_price', 'image_slot', 'image_url', 'badge', 'allergens', 'is_featured', 'is_active', 'sort_order',
+        'base_price', 'preparation_hours', 'image_slot', 'image_url', 'badge', 'allergens', 'is_featured', 'is_active', 'sort_order',
     ];
 
-    protected $casts = ['base_price' => 'decimal:2', 'is_featured' => 'boolean', 'is_active' => 'boolean'];
+    protected $casts = ['base_price' => 'decimal:2', 'preparation_hours' => 'integer', 'is_featured' => 'boolean', 'is_active' => 'boolean'];
 
     public function category(): BelongsTo
     {

@@ -216,6 +216,7 @@ class AdminController extends Controller
             'short_description' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'base_price' => ['required', 'numeric', 'min:0'],
+            'preparation_hours' => ['required', 'integer', 'min:1', 'max:8760'],
             'image_slot' => ['required', 'string', Rule::in(['sprite-1', 'sprite-2', 'sprite-3', 'sprite-4', 'sprite-5', 'sprite-6', 'sprite-7', 'sprite-8'])],
             'image_url' => ['nullable', 'string', 'max:500'],
             'is_featured' => ['required', 'boolean'],
