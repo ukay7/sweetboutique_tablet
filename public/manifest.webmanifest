@@ -1,0 +1,13 @@
+{
+    "name": "Mama Mia Cucina Bakery Catalogue",
+    "short_name": "Mama Mia Cucina",
+    "description": "Tablet-first bakery catalogue and inquiry system",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "any",
+    "background_color": "#f7f1e8",
+    "theme_color": "#22130f",
+    "icons": [
+        { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    ]
+}
